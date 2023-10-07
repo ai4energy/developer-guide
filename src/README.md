@@ -1,6 +1,6 @@
 ---
 icon: puzzle-piece
-title: 组件库
+title: 开发者手册
 author: Mingtao Li
 
 ---
