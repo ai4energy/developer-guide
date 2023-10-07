@@ -16,7 +16,7 @@ export default hopeTheme({
 
   editLink: false,
 
-  repo: "ai4energy/",
+  repo: "ai4energy/developer-guide",
 
   docsDir: "src",
 
