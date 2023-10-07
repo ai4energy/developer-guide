@@ -23,7 +23,7 @@ author: Mingtao Li
 
 对于变量声明，必须提供变量类型；这应该从项目中声明的所有变量类型的下拉列表中选择（或者跨项目引用的项目）。连接类型可以包括标量和数组变量：
 
-要定义数组的维数，请单击<scalar>单元格以访问维度编辑器。
+要定义数组的维数，请单击scalar单元格以访问维度编辑器。
 
 在“添加新维度”框中，可以选择在此连接类型中声明的整数参数，或者键入一个文字值（例如，7）。
 
@@ -44,3 +44,16 @@ author: Mingtao Li
 “显示模板选项卡”允许您定义连接类型携带的哪些变量应出现在结果流表中。
 
 在此选项卡上，您为应出现在流表中的每个变量提供一个标签，并指定这些数量在表格中的顺序。请注意，只有出现在“显示模板选项卡”上的那些数量才会出现在流表中。
+
+参考Modelingtoolkit的/src/systems/connectors.jl，以下是代码片段：
+
+```julia
+abstract type AbstractConnectorType end
+struct StreamConnector <: AbstractConnectorType end
+struct RegularConnector <: AbstractConnectorType end
+struct DomainConnector <: AbstractConnectorType end
+```
+
+说明它能很好的处理DomainConnector情形。而对于数组的情况，这是由@variable 和@parameter 的数组设置决定的。
+
+但是Modelingtoolkit本身的connector不能处理有外部对象的情况，我们需要考虑一下。就是外部的物性对象之类的，需要思考如何实现，才能具有普遍适用性。
