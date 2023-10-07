@@ -82,3 +82,21 @@ struct DomainConnector <: AbstractConnectorType end
 8. **stream Medium.ExtraProperty C_outflow[Medium.nC]**: 这是一组流变量，表示如果 `m_flow < 0` 时，与连接点接近的额外属性。这些属性通常用于描述在负质量流速情况下的出流中的其他特性。
 
 总之，这段代码定义了一个连接器，用于描述流体传输的接口，可以处理多种流体和条件，还可以选择不同的介质模型。这对于建模涉及流体流动的系统非常有用。
+
+就是说流体中的连接器，有介质类型，质量流量、绝对压力、比焓、质量分数、额外属性。
+
+接下来定义了FluidPort_a，只是通过annotation赋予了一个默认的名字，并且加上了图标。
+
+接下来定义了FluidPort_b，它与FluidPort_a只是默认名字和图标不一样。
+
+而FluidPorts_a和FluidPorts_b则是向量化的，就是数组形式的。
+
+接下来定义了PartialTwoPort模型，这种模型是为了继承用的，定义了介质，port_a和port_b。
+
+进一步基于PartialTwoPort定义了PartialTwoPortTransport。定义了dp，通过质量流速获得了压降。还有质量平衡方程。
+
+对于ThermoSysPro这个modelica包而言，也是首先定义了单位（在Units.mo中）。
+
+然后在Fluid中的interfaces下定义了一些connectors。在Properties/Fluid下也定义了一些interfaces。不过从包的结构可以看出，EDF出品的ThermoSysPro相对而言较少用到继承（在modelica中是extends）。
+
+从[TransiEnt Library](https://github.com/TransiEnt-official)也可看出其设计是较少用到继承的。
