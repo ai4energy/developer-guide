@@ -29,3 +29,33 @@ type Angle = Real (
 
 此外Modelica的标准库的Units还定义非国际单位制的单位，以及单位转换。
 
+
+
+## 变量类型
+
+在流程仿真中，由模型方程计算的所有量都是变量；变量始终是实数（连续）数字，并且必须始终被赋予变量类型。
+
+变量类型包含以下信息：
+
+1. 名称，可以在全局范围内引用此类型。
+2. 变量类型的默认值。这个值将用作涉及此类型变量的任何迭代计算的初始猜测，除非为单个变量覆盖了它，或者从先前的计算中获得了更好的猜测。
+3. 变量类型的值的上下限。涉及此类型变量的任何计算必须得出在这些上下限内的结果。这些限制可以用于确保计算结果在物理上有意义。同样，这些限制可以针对单个此类型的变量进行覆盖。
+4. 可选的测量单位。建议提供这一信息，以提高模型的可读性。
+
+我们可以使用如下的命令创建变量类型表:
+```sql
+-- 创建变量类型表
+CREATE TABLE variable_types (
+    id SERIAL PRIMARY KEY,
+    symbol VARCHAR(50) UNIQUE NOT NULL,  -- 变量类型的符号
+    abbreviation VARCHAR(50),  -- 变量类型的简写
+    unit_id INTEGER REFERENCES units(id),  -- 关联的单位ID
+    min_value DOUBLE PRECISION,  -- 最小值
+    max_value DOUBLE PRECISION,  -- 最大值
+    default_value DOUBLE PRECISION,  -- 默认值
+    doc TEXT,  -- 英文文档或描述
+    doc_zh TEXT  -- 简体中文文档或描述
+);
+```
+
+同样的，针对每一条记录，我们可以生成一个julia类型（结构体），并生成一个该类型的实例（以const global的形式），export出来备用。

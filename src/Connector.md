@@ -3,6 +3,21 @@ icon: puzzle-piece
 title: 连接器类型
 author: Mingtao Li
 ---
+## 连接器
+
+在Modelingtoolkit中，连接器（connector）是使用@connector宏来实现的。定义一个函数生成某ODESystem，而同时在前面加上@connector就会定义成连接器。
+
+连接器实际上是通过ODESystem的connector_type提供的。
+
+```julia
+    """
+    connector_type: type of the system
+    """
+    connector_type::Any
+```
+
+
+
 
 ## 连接器类型
 连接器用于组件间的连接。
