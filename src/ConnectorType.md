@@ -95,8 +95,6 @@ struct DomainConnector <: AbstractConnectorType end
 
 进一步基于PartialTwoPort定义了PartialTwoPortTransport。定义了dp，通过质量流速获得了压降。还有质量平衡方程。
 
-对于ThermoSysPro这个modelica包而言，也是首先定义了单位（在Units.mo中）。
-
-然后在Fluid中的interfaces下定义了一些connectors。在Properties/Fluid下也定义了一些interfaces。不过从包的结构可以看出，EDF出品的ThermoSysPro相对而言较少用到继承（在modelica中是extends）。
+对于ThermoSysPro这个modelica包而言，也是首先定义了单位（在Units.mo中）。然后在Fluid中的interfaces下定义了一些connectors。在Properties/Fluid下也定义了一些interfaces。不过从包的结构可以看出，EDF出品的ThermoSysPro相对而言较少用到继承（在modelica中是extends）。
 
 从[TransiEnt Library](https://github.com/TransiEnt-official)也可看出其设计是较少用到继承的。
