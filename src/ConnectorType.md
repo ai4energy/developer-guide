@@ -57,3 +57,28 @@ struct DomainConnector <: AbstractConnectorType end
 说明它能很好的处理DomainConnector情形。而对于数组的情况，这是由@variable 和@parameter 的数组设置决定的。
 
 但是Modelingtoolkit本身的connector不能处理有外部对象的情况，我们需要考虑一下。就是外部的物性对象之类的，需要思考如何实现，才能具有普遍适用性。
+
+### Modelica标准库中Fluid的Interface解读
+
+文件地址：/Modelica 4.0.0+maint.om/Fluid/Interfaces.mo
+
+这段代码是Modelica语言中的一种定义，用于描述一个名为"FluidPort"的连接器（connector）。这个连接器主要用于表示在管道网络中进行流体传输的接口。以下是代码中的一些重要元素的解释：
+
+1. **connector FluidPort**: 这是一个连接器类型的定义，用于描述一种可以连接到其他组件的接口类型。在这种情况下，它描述了一个用于流体流动的接口。
+
+2. **"Interface for quasi one-dimensional fluid flow in a piping network (incompressible or compressible, one or more phases, one or more substances)"**: 这是对连接器用途的简要描述，表明它适用于描述在管道网络中进行流体流动的情况，可以涵盖不可压缩或可压缩流体、单相或多相流动以及单一或多个物质的情况。
+
+3. **replaceable package Medium = Modelica.Media.Interfaces.PartialMedium**: 这是一个可替代的部分介质包（replaceable package），它指定了连接器可以使用的介质模型。这意味着在实际使用时，你可以选择不同的介质模型来与这个连接器一起使用，以适应不同的流体和条件。
+就是外部对象啦。
+
+4. **flow Medium.MassFlowRate m_flow**: 这是一个流动量（flow variable），用于表示从连接点进入组件的质量流速。这个变量通常用于描述流入组件的质量流动。
+
+5. **Medium.AbsolutePressure p**: 这是一个用于表示连接点的热力学压力的变量。它表示与连接点相关的压力。
+
+6. **stream Medium.SpecificEnthalpy h_outflow**: 这是一个流变量（stream variable），用于表示如果 `m_flow < 0` 时，与连接点接近的特定热焓。通常用于描述在负质量流速情况下的出流。
+
+7. **stream Medium.MassFraction Xi_outflow[Medium.nXi]**: 这是一组流变量，表示如果 `m_flow < 0` 时，与连接点接近的独立混合物质量分数。这些变量通常用于描述在负质量流速情况下的出流中各种组分的质量分数。
+
+8. **stream Medium.ExtraProperty C_outflow[Medium.nC]**: 这是一组流变量，表示如果 `m_flow < 0` 时，与连接点接近的额外属性。这些属性通常用于描述在负质量流速情况下的出流中的其他特性。
+
+总之，这段代码定义了一个连接器，用于描述流体传输的接口，可以处理多种流体和条件，还可以选择不同的介质模型。这对于建模涉及流体流动的系统非常有用。
