@@ -123,5 +123,64 @@ const global m = unit()
 
 ## 变量类型
 
+在流程仿真中，由模型方程计算的所有量都是变量；变量始终是实数（连续）数字，并且必须始终被赋予变量类型。
+
+变量类型包含以下信息：
+
+1. 名称，可以在全局范围内引用此类型。
+2. 变量类型的默认值。这个值将用作涉及此类型变量的任何迭代计算的初始猜测，除非为单个变量覆盖了它，或者从先前的计算中获得了更好的猜测。
+3. 变量类型的值的上下限。涉及此类型变量的任何计算必须得出在这些上下限内的结果。这些限制可以用于确保计算结果在物理上有意义。同样，这些限制可以针对单个此类型的变量进行覆盖。
+4. 可选的测量单位。建议提供这一信息，以提高模型的可读性。
+
+我们可以使用如下的命令创建变量类型表:
+```sql
+-- 创建变量类型表
+CREATE TABLE variable_types (
+    id SERIAL PRIMARY KEY,
+    symbol VARCHAR(50) UNIQUE NOT NULL,  -- 变量类型的符号
+    abbreviation VARCHAR(50),  -- 变量类型的简写
+    unit_id INTEGER REFERENCES units(id),  -- 关联的单位ID
+    min_value DOUBLE PRECISION,  -- 最小值
+    max_value DOUBLE PRECISION,  -- 最大值
+    default_value DOUBLE PRECISION,  -- 默认值
+    doc TEXT,  -- 英文文档或描述
+    doc_zh TEXT  -- 简体中文文档或描述
+);
+```
+
+同样的，针对每一条记录，我们可以生成一个julia类型（结构体），并生成一个该类型的实例（以const global的形式），export出来备用。
+
+## 变量
+
+在Modelingtoolkit中，变量是使用@variable宏来定义的。我们默认所有的变量都是时间的函数。
+
+定义一个变量需要一个符号来表示。同时我们可以在这个符号上搭载上变量的相关信息，包括其变量类型。
+
+Modelingtoolkit的设计使用了Symbolics.jl库，而Symbolics.jl允许在符号上搭载metadata信息，这给我们设计变量提供了很多便利。关于metadata的使用，可以参考[杨景懿写的一篇博客](https://blog.csdn.net/jake484/article/details/121450196)，或者阅读Modelingtoolkit的源码。
+
+以下代码片段来自Modelingtoolkit的/src/variables.jl:
+```julia
+struct VariableUnit end
+struct VariableConnectType end
+struct VariableNoiseType end
+struct VariableInput end
+struct VariableOutput end
+struct VariableIrreducible end
+struct VariableStatePriority end
+struct VariableMisc end
+Symbolics.option_to_metadata_type(::Val{:unit}) = VariableUnit
+Symbolics.option_to_metadata_type(::Val{:connect}) = VariableConnectType
+Symbolics.option_to_metadata_type(::Val{:noise}) = VariableNoiseType
+Symbolics.option_to_metadata_type(::Val{:input}) = VariableInput
+Symbolics.option_to_metadata_type(::Val{:output}) = VariableOutput
+Symbolics.option_to_metadata_type(::Val{:irreducible}) = VariableIrreducible
+Symbolics.option_to_metadata_type(::Val{:state_priority}) = VariableStatePriority
+Symbolics.option_to_metadata_type(::Val{:misc}) = VariableMisc
+```
+可以看到Modelingtoolkit的变量提供了misc这个metadata，我们可以用它来记录我们想记录的信息。具体而言就是生成变量的时候，我们把其misc这个metadata设置成我们要的变量类型的实例。
+
+比如说我们有个Activate_Energy活化能变量类型，而activate_energy是Activate_Energy的实例。ke是一个变量，我们可以设置ke的misc这个metadata为activate_energy。
+
+（具体需要写代码实现。）
 
 
