@@ -14,6 +14,9 @@ author: Mingtao Li
 
 拟这么设计：一个介质放在一个module里，在这个module里有一些函数，不同的函数返回不一样的ODESystem。而每个具体的ODESystem里就是对应的方程系统（当然会用到register的外部物性函数）。对应的connector有个mediatype选择器，不同的选择器会导致不一样的media的ODESystem引入。而连接器的这个media和组件的media也要对应上，否则就会出现连接错误。
 
+既然用了代码生成，就用彻底一点，不同的介质、不同的mode，我们就可以生成不同的ODESystem，不需要在ODESystem里头去允许选择。这样就简单多了。也就是说，pipe=Pipe(;media=:water, mode=1),这个函数可以根据不同的media和mode返回不同的ODESystem。而不是生成ODESystem之后再用setmedia(pipe)去改变介质，用setmode(pipe)改变mode。我们可以充分利用多重分发。总的函数是Pipe，根据media的不同，调用不同分发函数。
+
+对port(或者connector)也是如此。用julia思维处理问题。
 
 
 
